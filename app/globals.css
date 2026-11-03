@@ -1,26 +1,276 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------
+   Bellas Artes Los Arcos — design tokens
+   Ivory base, pigment accents (cobalt / coral / violet / yellow)
+------------------------------------------------------------------ */
+
+@theme {
+  /* Surfaces */
+  --color-ivory: #f8f3e9;
+  --color-ivory-deep: #efe7d8;
+  --color-paper: #fffdf7;
+  --color-ink: #15110d;
+  --color-ink-soft: #3d352c;
+  --color-ink-muted: #6d6153;
+  --color-line: #ddd1bd;
+
+  /* Pigments */
+  --color-cobalt: #1b3fd8;
+  --color-cobalt-deep: #0f2693;
+  --color-coral: #ff5a3c;
+  --color-coral-deep: #d8341c;
+  --color-violet: #6d2fd4;
+  --color-violet-deep: #4a1a99;
+  --color-yellow: #ffc219;
+  --color-yellow-deep: #e09c00;
+
+  /* Type */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion */
+  --ease-organic: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pigment: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-yellow);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cobalt);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Headings use the editorial serif with optical sizing */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img {
+    -webkit-user-drag: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------ */
+
+/* Page titles. Sized to sit inside a ~60rem measure without overflowing. */
+@utility display-xl {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  font-size: clamp(2.5rem, 7vw, 6.5rem);
+}
+
+/* The homepage statement, sized to the narrower hero column. */
+@utility display-hero {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.038em;
+  line-height: 0.88;
+  font-size: clamp(2.75rem, 6.1vw, 5.5rem);
+}
+
+@utility display-lg {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  font-size: clamp(2.25rem, 7.2vw, 6rem);
+}
+
+@utility display-md {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  font-size: clamp(1.75rem, 4.2vw, 3.25rem);
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Soft paper grain — cheap, non-GPU-heavy, purely decorative */
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  }
+}
+
+@utility edge-fade-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+
+/* ------------------------------------------------------------------
+   Keyframes (CSS-driven ambience — all disabled under reduced motion)
+------------------------------------------------------------------ */
+
+@keyframes drift-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
+  }
+}
+
+@keyframes marquee-x {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes sheen {
+  from {
+    background-position: 200% 50%;
+  }
+  to {
+    background-position: -100% 50%;
+  }
+}
+
+.animate-drift-slow {
+  animation: drift-slow 22s var(--ease-organic) infinite;
+}
+
+.animate-marquee-x {
+  animation: marquee-x 42s linear infinite;
+}
+
+/* ------------------------------------------------------------------
+   Opening curtain — pure CSS, so it works before (and without) JS and
+   can never strand the page behind an overlay.
+------------------------------------------------------------------ */
+
+@keyframes curtain-lift {
+  0%,
+  22% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+@keyframes curtain-mark {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  28%,
+  64% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes curtain-dot {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  45%,
+  70% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.75);
+    opacity: 0;
+  }
+}
+
+.curtain {
+  animation: curtain-lift 1.15s var(--ease-organic) 0.1s forwards;
+}
+
+.curtain-mark {
+  animation: curtain-mark 1.15s var(--ease-organic) 0.1s forwards;
+}
+
+.curtain-dot {
+  animation: curtain-dot 1.15s var(--ease-organic) forwards;
+}
+
+/* ------------------------------------------------------------------
+   Reduced motion — stop everything that moves on its own
+------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
